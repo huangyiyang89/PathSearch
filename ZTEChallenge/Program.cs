@@ -14,7 +14,7 @@ namespace ZTEChallenge
         static void Main(string[] args)
         {
             
-            Map newMap = new Map("input.txt");
+            Map newMap = new Map("TestData/input.txt");
 
             //关闭保留相同权值路径可大幅提高搜索速度,但只能获得部分最优解,在不需要多个最优解时可关闭.
             //newMap.RetainSameValuePaths = false;

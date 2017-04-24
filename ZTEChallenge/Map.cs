@@ -234,6 +234,8 @@ namespace ZTEChallenge
 
                     //TODO:添加优化算法
 
+
+
                     List<int> nextLastPoints = new List<int>(RemainPoints);
 
                     int nextPoint = Matrix[from, RemainPoints[i]].Paths[j].To;
@@ -386,6 +388,9 @@ namespace ZTEChallenge
             return true;
         }
       
+
+
+        
         #endregion
     }
 }
