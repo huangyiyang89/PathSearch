@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace ZTEChallenge
 {
-    class Map
+    public class Map
     {
         /// <summary>
         /// 构造函数
@@ -102,7 +102,7 @@ namespace ZTEChallenge
             }
         }
 
-        public void ExecSearchUsefulPaths()
+        public void ExecSearchAllUsefulPaths()
         {
 
             //忽略MustNotPass路径
@@ -136,24 +136,35 @@ namespace ZTEChallenge
                                 {
                                     var eachPath = Matrix[i, j].Paths[p - 1];
                                     if (newPath.Distance >= eachPath.Distance && newPath.Step >= eachPath.Step) { shouldAdd = false; }
-                                    //是否保留相同权值和步数的路径,保留会影响搜索速度,但能找到多个最优解,如果存在多个最优解的话.
+                                    //是否保留相同权值和步数的路径,保留会影响搜索速度,但能找到多个最优解(如果存在).
                                     if (newPath.EqualsInValue(eachPath) && RetainSameValuePaths) { shouldAdd = true; }
                                     //借此循环删除List中无用路径
                                     if (eachPath.IsUseless(newPath)) { Matrix[i, j].Paths.Remove(eachPath); }
+                                    //保存最小Distance路径
+                                    if (newPath.LessValueOfDistance(Matrix[i, j].MinDistancePath)) { Matrix[i, j].MinDistancePath = newPath; }
+                                    //保存最小Step路径
+                                    if (newPath.LessValueOfStep(Matrix[i, j].MinStepPath)) { Matrix[i, j].MinStepPath = newPath; }
+
                                 }
                                 #endregion
-                                if (shouldAdd){Matrix[i, j].Paths.Add(newPath);}
+                                if (shouldAdd) { Matrix[i, j].Paths.Add(newPath); }
                             }
                         }
                     }
                 }
             }
-            
+
             //将MustNotPass路径重新放回
             foreach (Path p in MustNotPassAnyWayPaths)
             {
                 Matrix[p.From, p.To].Paths.Insert(0, p);
             }
+        }
+
+        public void ExecSearchAllMustPassUsefulPaths()
+        {
+            List<int> ShouldPassPoints = GetShouldPassPoints();
+
         }
 
         public void ExecSearchAllTargetPaths(int s, int e)
@@ -164,7 +175,7 @@ namespace ZTEChallenge
             DfsAllMustPassPaths(s, e, ShouldPassPoints);
         }
 
-        public void ExecSearchMinDistanceTargetPaths(int s,int e)
+        public void ExecSearchMinDistanceTargetPaths(int s, int e)
         {
 
         }
@@ -208,31 +219,34 @@ namespace ZTEChallenge
                         }
                     }
 
-                    
-                    for(int i = TargetPathsContainer.Paths.Count; i > 0; i--)
+
+                    for (int i = TargetPathsContainer.Paths.Count; i > 0; i--)
                     {
-                        var path = TargetPathsContainer.Paths[i-1];
+                        var path = TargetPathsContainer.Paths[i - 1];
                         if (newPath.IsUseless(path)) { shouldAdd = false; }
                         if (path.IsUseless(newPath)) { TargetPathsContainer.Paths.Remove(path); }
-                    }   
-                     
+                    }
+
                     if (shouldAdd)
                     {
                         TargetPathsContainer.Paths.Add(newPath);
                     }
-                    
+
                 }
 
                 return;
             }
+
+
+
+
+            //对于每个剩余必经点
             for (int i = 0; i < RemainPoints.Count; i++)
             {
+                //对于每个从当前点到剩余必经点i的路径
                 for (int j = 0; j < Matrix[from, RemainPoints[i]].Paths.Count; j++)
                 {
                     Path newPath = currentPath == null ? Matrix[from, RemainPoints[i]].Paths[j] : new Path(currentPath, Matrix[from, RemainPoints[i]].Paths[j]);
-
-
-                    //TODO:添加优化算法
 
 
 
@@ -387,10 +401,134 @@ namespace ZTEChallenge
             }
             return true;
         }
-      
+
+        public void RemoveAlllllll()
+        {
+            List<int> ShouldPassPoints = GetShouldPassPoints();
+            foreach(int p1 in ShouldPassPoints)
+            {
+                List<Path> usefulPaths = new List<Path>();
+                
+                foreach(int p2 in ShouldPassPoints)
+                {
+                    usefulPaths.AddRange(Matrix[p1, p2].Paths);
+                }
+
+                Path MinDistancePath = null;
+                Path MinStepPath = null;
+                foreach (int p2 in ShouldPassPoints)
+                {
+                    if (p1 == p2) { continue; }
+                    var path = Matrix[p1, p2].MinDistancePath;
+                    if (MinDistancePath == null) { MinDistancePath = path; }
+                    else if (path.LessValueOfDistance(MinDistancePath))
+                    {
+                        MinDistancePath = path;
+                    }
+                    path = Matrix[p1, p2].MinStepPath;
+                    if (MinStepPath == null)
+                    { MinStepPath = path;
+                    }
+                    else if(path.LessValueOfStep(MinStepPath))
+                    {
+                        MinStepPath = path;
+                    }
+                }
+                for (int i = usefulPaths.Count; i > 0; i--)
+                {
+                    if (usefulPaths[i - 1].IsUseless(MinDistancePath) || usefulPaths[i - 1].IsUseless(MinStepPath))
+                    {
+                       
+                        Matrix[usefulPaths[i - 1].From, usefulPaths[i - 1].To].Paths.Remove(usefulPaths[i - 1]);
+                        usefulPaths.RemoveAt(i - 1);
+                    }
+                }
+            }
 
 
-        
-        #endregion
+        }
+
+        private void DfsAllMustPassPaths2(int from, int end, List<int> RemainPoints, Path currentPath = null)
+        {
+
+            if (RemainPoints.Count == 0)
+            {
+                foreach (Path endPath in Matrix[from, end].Paths)
+                {
+                    var newPath = new Path(currentPath, endPath);
+
+                    bool shouldAdd = true;
+                    //判断是否经过必经路径
+                    for (int i = 0; i < MustPassEitherWayPaths.Count; i = i + 2)
+                    {
+                        if (!(newPath.ContainPath(MustPassEitherWayPaths[i]) || newPath.ContainPath(MustPassEitherWayPaths[i + 1])))
+                        {
+                            shouldAdd = false;
+                        }
+                    }
+
+
+                    for (int i = TargetPathsContainer.Paths.Count; i > 0; i--)
+                    {
+                        var path = TargetPathsContainer.Paths[i - 1];
+                        if (newPath.IsUseless(path)) { shouldAdd = false; }
+                        if (path.IsUseless(newPath)) { TargetPathsContainer.Paths.Remove(path); }
+                    }
+
+                    if (shouldAdd)
+                    {
+                        TargetPathsContainer.Paths.Add(newPath);
+                    }
+
+                }
+
+                return;
+            }
+
+
+
+            var usefulPaths = new List<Path>();
+            foreach (int point in RemainPoints)
+            {
+                usefulPaths.AddRange(Matrix[from, point].Paths.ToList());
+            }
+
+          
+
+            Path MinDistancePath = null;
+            Path MinStepPath = null;
+            foreach (int p in RemainPoints)
+            {
+                var path = Matrix[from, p].MinDistancePath;
+                if (MinDistancePath == null || path.LessValueOfDistance(MinDistancePath))
+                {
+                    MinDistancePath = path;
+                }
+                path = Matrix[from, p].MinStepPath;
+                if (MinStepPath == null || path.LessValueOfStep(MinStepPath))
+                {
+                    MinStepPath = path;
+                }
+            }
+            for(int i = usefulPaths.Count; i > 0; i--)
+            {
+                if(usefulPaths[i-1].IsUseless(MinDistancePath)|| usefulPaths[i-1].IsUseless(MinStepPath))
+                {
+                    usefulPaths.RemoveAt(i-1);
+                }
+            }
+         
+            foreach (Path p in usefulPaths)
+            {
+                Path newPath = currentPath == null ? p : new Path(currentPath, p);
+                List<int> nextLastPoints = new List<int>(RemainPoints);
+                nextLastPoints.Remove(p.From);
+                DfsAllMustPassPaths(p.To, end, nextLastPoints, newPath);
+            }
+            
+        }
+
+
     }
+    #endregion
 }

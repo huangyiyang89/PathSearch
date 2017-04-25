@@ -2,7 +2,7 @@
 
 namespace ZTEChallenge
 {
-    class PathsContainer
+    public class PathsContainer
     {
         public PathsContainer(int from, int to)
         {
@@ -17,33 +17,9 @@ namespace ZTEChallenge
 
 
         //可以添加一些方法和属性
-        public int MinDistance
-        {
-            get
-            {
-                int min = 9999;
-                foreach (Path p in Paths)
-                {
-                    min = p.Distance < min ? p.Distance : min;
+       
 
-                }
-                return min;
-            }
-
-        }
-        public int MinStep
-        {
-            get
-            {
-                int min = 9999;
-                foreach (Path p in Paths)
-                {
-                    min = p.Distance < min ? p.Step : min;
-
-                }
-                return min;
-            }
-        }
-
+        public Path MinDistancePath { get; set; }
+        public Path MinStepPath { get; set; }
     }
 }
