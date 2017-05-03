@@ -96,6 +96,11 @@ namespace ZTEChallenge
             return Distance == path.Distance && Step == path.Step && !IsEquals(path) ? true : false;
         }
 
+
         
+
+
+
+
     }
 }

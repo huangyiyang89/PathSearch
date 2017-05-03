@@ -15,35 +15,33 @@ namespace ZTEChallenge
         {
             Map newMap = new Map("TestData/input.txt");
             newMap.AddMustNotPassAnyWayPath(11, 12);
-
-            newMap.ExecSearchAllUsefulPaths();
-
-
-
             newMap.AddMustPassPoint(7);
             newMap.AddMustPassPoint(12);
             newMap.AddMustPassEitherWayPath(2, 4);
             newMap.AddMustPassEitherWayPath(13, 14);
+
             //关闭保留相同权值路径可大幅提高搜索速度,但只能获得部分最优解,在不需要多个最优解时可关闭.
             //newMap.RetainSameValuePaths = false;
-
             long time0 = DateTime.Now.Ticks;
 
-            
-            
+            newMap.ExecSearchUsefulMatrix();
+
 
             Console.WriteLine("搜索有效路径用时: " + ((DateTime.Now.Ticks - time0) / 10000).ToString() + "毫秒.");
             //打印全部点到点有效路径
             // PrintAllUsefulPaths(newMap);
 
 
-            //newMap.RemoveAlllllll();
+          
             time0 = DateTime.Now.Ticks;
+            //newMap.RemoveAlllllll();
             newMap.ExecSearchAllTargetPaths(0, 17);
+            //newMap.ExecSearchAllTargetPaths3(0, 17);
+            //newMap.ExecTwice();
             Console.WriteLine("搜索目标路径用时: " + ((DateTime.Now.Ticks - time0) / 10000).ToString() + "毫秒.");
 
             PrintTargetPaths(newMap);
-
+            
 
             Console.ReadKey();
         }
@@ -73,7 +71,7 @@ namespace ZTEChallenge
             Console.Write("  禁止的路径: ");
             foreach (Path p in map.MustNotPassAnyWayPaths)
             {
-                Console.Write(p.From.ToString() + "-" + p.To.ToString() + " ");
+                Console.Write(p.From.ToString() + "->" + p.To.ToString() + " ");
             }
 
             Console.WriteLine();

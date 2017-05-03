@@ -5,87 +5,119 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000">
+        Title="ZTEGuiTest" Height="600" Width="1300">
     <Grid>
-        <Viewbox >
-            <Grid Name="grid">
-                <Line X1="111" Y1="111" X2="222" Y2="222" Cursor="Hand"></Line>
-                <Grid Height="40" Width="40" Margin="17,237,925,282">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="Yellow" StrokeThickness="1" Name="n0">
-                    </Ellipse>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="600*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1000*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Border Background="LightGray"  Grid.Column="1" Grid.RowSpan="2"/>
+
+        <Viewbox Grid.Column="0" Grid.RowSpan="2">
+            <Grid x:Name="grid">
+                <Grid Height="40" Width="40" Margin="17,237,925,244.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="Yellow" StrokeThickness="1" x:Name="n0"/>
                     <TextBlock Text="S" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="74,58,868,461">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n1" Cursor="Hand"/>
+                <Grid Height="40" Width="40" Margin="74,58,868,423.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n1" Cursor="Hand"/>
                     <TextBlock Text="1" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="140,195,802,324">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n2"/>
+                <Grid Height="40" Width="40" Margin="140,195,802,286.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n2"/>
                     <TextBlock Text="2" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="129,328,813,191">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n3" Cursor="Hand" ToolTip="菜单"/>
+                <Grid Height="40" Width="40" Margin="129,328,813,153.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n3" Cursor="Hand" ToolTip="菜单"/>
                     <TextBlock Text="3" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22" IsHitTestVisible="False"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="261,94,681,425">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n4"/>
+                <Grid Height="40" Width="40" Margin="261,94,681,387.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n4"/>
                     <TextBlock Text="4" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="312,199,630,320">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n5"/>
+                <Grid Height="40" Width="40" Margin="312,199,630,282.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n5"/>
                     <TextBlock Text="5" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="425,295,517,224">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n6"/>
+                <Grid Height="40" Width="40" Margin="425,295,517,186.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n6"/>
                     <TextBlock Text="6" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="270,378,672,141">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n7"/>
+                <Grid Height="40" Width="40" Margin="270,378,672,103.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n7"/>
                     <TextBlock Text="7" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="431,426,511,93">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n8"/>
+                <Grid Height="40" Width="40" Margin="431,426,511,55.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n8"/>
                     <TextBlock Text="8" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="403,10,539,509">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n9"/>
+                <Grid Height="40" Width="40" Margin="403,10,539,471.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n9"/>
                     <TextBlock Text="9" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="439,140,503,379">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n10"/>
+                <Grid Height="40" Width="40" Margin="439,140,503,341.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n10"/>
                     <TextBlock Text="10" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="561,47,381,472">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n11"/>
+                <Grid Height="40" Width="40" Margin="561,47,381,434.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n11"/>
                     <TextBlock Text="11" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="595,184,347,335">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n12"/>
+                <Grid Height="40" Width="40" Margin="595,184,347,297.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n12"/>
                     <TextBlock Text="12" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="747,270,195,249">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n13"/>
+                <Grid Height="40" Width="40" Margin="747,270,195,211.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n13"/>
                     <TextBlock Text="13" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="599,337,343,182">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n14"/>
+                <Grid Height="40" Width="40" Margin="599,337,343,144.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n14"/>
                     <TextBlock Text="14" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="717,422,225,97">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n15"/>
+                <Grid Height="40" Width="40" Margin="717,422,225,59.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n15"/>
                     <TextBlock Text="15" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="719,94,223,425">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" Name="n16"/>
+                <Grid Height="40" Width="40" Margin="719,94,223,387.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="LightSkyBlue" StrokeThickness="1" x:Name="n16"/>
                     <TextBlock Text="16" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
-                <Grid Height="40" Width="40" Margin="885,201,57,318">
-                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="Yellow" StrokeThickness="1" Name="n17"/>
+                <Grid Height="40" Width="40" Margin="885,201,57,280.688">
+                    <Ellipse Width="40" Height="40" Stroke="Blue" Fill="Yellow"  StrokeThickness="1" x:Name="n17"/>
                     <TextBlock Text="E" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.FontSize="22"/>
                 </Grid>
             </Grid>
-            
+
         </Viewbox>
-        
+
+        <Grid Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="500*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="textBox" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="" Background="Black" Foreground="White"></TextBox>
+
+            <Button x:Name="button1" Content="计算经过必经点和必经路径的全部有用路径" HorizontalAlignment="Stretch"  Margin="10,55,10,10" Grid.Row="1" VerticalAlignment="Stretch" Click="button1_Click"/>
+
+            <GroupBox x:Name="groupBox" Header="查看任意两点信息" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Height="50" Width="300">
+                <Grid>
+                    <Button x:Name="button" Content="打印" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Stretch" Click="button_Click" Margin="248,0,0,0" FontSize="14" VerticalContentAlignment="Center"/>
+                    <ComboBox x:Name="comboBoxFrom" HorizontalAlignment="Left" HorizontalContentAlignment="Center"  Grid.Row="1" VerticalAlignment="Stretch" Width="45" FontSize="14" VerticalContentAlignment="Center"/>
+                    <ComboBox x:Name="comboBoxTo" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="45" HorizontalContentAlignment="Center" Margin="69,0,0,0" FontSize="14" VerticalContentAlignment="Center"/>
+                    <ComboBox x:Name="comboBoxType" HorizontalAlignment="Left" Margin="119,0,0,0" VerticalAlignment="Stretch" Width="124" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="label1" Content="到" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top" Width="24" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </GroupBox>
+
+        </Grid>
+        <Label x:Name="label" Content="右键单击节点或路径来设置特殊点或路径." HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Margin="10,0,0,0"/>
+
+
+
     </Grid>
 </Window>
