@@ -102,7 +102,7 @@
             </Grid.RowDefinitions>
             <TextBox x:Name="textBox" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="" Background="Black" Foreground="White"></TextBox>
 
-            <Button x:Name="button1" Content="计算经过必经点和必经路径的全部有用路径" HorizontalAlignment="Stretch"  Margin="10,55,10,10" Grid.Row="1" VerticalAlignment="Stretch" Click="button1_Click"/>
+            <Button x:Name="button1" Content="Execute" HorizontalAlignment="Stretch"  Margin="94,55,10,10" Grid.Row="1" VerticalAlignment="Stretch" Click="button1_Click"/>
 
             <GroupBox x:Name="groupBox" Header="查看任意两点信息" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Height="50" Width="300">
                 <Grid>
@@ -113,6 +113,7 @@
                     <Label x:Name="label1" Content="到" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top" Width="24" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 </Grid>
             </GroupBox>
+            <CheckBox x:Name="checkBox" Content="剪枝" HorizontalAlignment="Left" Margin="10,66,0,0" Grid.Row="1" VerticalAlignment="Top" Checked="checkBox_Checked" Unchecked="checkBox_UnChecked"/>
 
         </Grid>
         <Label x:Name="label" Content="右键单击节点或路径来设置特殊点或路径." HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Margin="10,0,0,0"/>

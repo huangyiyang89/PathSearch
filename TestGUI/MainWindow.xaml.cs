@@ -373,6 +373,7 @@ namespace TestGUI
         {
             WriteLine("-----正在搜索要求路径...-----");
             long time0 = DateTime.Now.Ticks;
+            
             newMap.ExecSearchAllTargetPaths(start, end);
             WriteLine("搜索结束.用时: " + ((DateTime.Now.Ticks - time0) / 10000).ToString() + "毫秒.");
             WriteLine("全部满足特殊点要求的最优路径:");
@@ -471,5 +472,15 @@ namespace TestGUI
             l2.Stroke = Brushes.Green;
         }
 
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            newMap.Cut = (bool)checkBox.IsChecked;
+            
+        }
+        private void checkBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            newMap.Cut = (bool)checkBox.IsChecked;
+
+        }
     }
 }

@@ -34,6 +34,7 @@ namespace ZTEChallenge
             MustPassEitherWayPaths = new List<Path>();
             MustNotPassAnyWayPaths = new List<Path>();
             RetainSameValuePaths = true;
+            Cut = false;
 
         }
 
@@ -60,7 +61,7 @@ namespace ZTEChallenge
         /// 是否在搜索有用路径时保留相同权值的路径,关闭可提高搜索速度以及查找目标路径的速度,默认开启.
         /// </summary> 
         public bool RetainSameValuePaths { get; set; }
-
+        public bool Cut { get; set; }
 
         public List<Path> MustNotPassAnyWayPaths { get; set; }
 
@@ -87,7 +88,7 @@ namespace ZTEChallenge
         {
             try
             {
-                var path1=MustPassEitherWayPaths.Where(p => p.From == pointA && p.To == pointB).FirstOrDefault();
+                var path1 = MustPassEitherWayPaths.Where(p => p.From == pointA && p.To == pointB).FirstOrDefault();
                 MustPassEitherWayPaths.Remove(path1);
                 var path2 = MustPassEitherWayPaths.Where(p => p.From == pointB && p.To == pointA).FirstOrDefault();
                 MustPassEitherWayPaths.Remove(path2);
@@ -289,15 +290,17 @@ namespace ZTEChallenge
         {
             TargetPathsContainer = new PathsContainer(s, e);
             TargetPathsContainer.Paths.Clear();
-            List<int> ShouldPassPoints = GetShouldPassPoints();
-            if (ShouldPassPoints.Count == 0)
-            {
-                TargetPathsContainer.Paths.AddRange(Matrix[s, e].Paths);
-                return;
-            }
+            //List<int> ShouldPassPoints = GetShouldPassPoints();
+            //if (ShouldPassPoints.Count == 0)
+            //{
+            //    TargetPathsContainer.Paths.AddRange(Matrix[s, e].Paths);
+            //    return;
+            //}
             //ShouldPassPoints.Remove(e);
             //ShouldPassPoints.Remove(s);
-            DfsAllMustPassPaths(s, e, ShouldPassPoints);
+            List<int> mustPassPoints = new List<int>(MustPassPoints);
+            List<Path> mustPassPaths = new List<Path>(MustPassEitherWayPaths);
+            DfsAllMustPassPaths(s, e, mustPassPoints, mustPassPaths);
         }
 
         //public void ExecSearchAllTargetPaths3(int s, int e)
@@ -379,7 +382,7 @@ namespace ZTEChallenge
             List<int> newList = new List<int>(MustPassPoints);
             foreach (Path p in MustPassEitherWayPaths)
             {
-                
+
                 if (!newList.Contains(p.From))
                 {
                     newList.Add(p.From);
@@ -392,31 +395,56 @@ namespace ZTEChallenge
             return newList;
 
         }
-        private void DfsAllMustPassPaths(int from, int end, List<int> RemainPoints, Path currentPath = null)
+        private List<int> GetShouldPassPoints(List<int> points, List<Path> paths)
         {
-            if (RemainPoints.Count == 0)
+            List<int> newList = new List<int>(points);
+            foreach (Path p in paths)
+            {
+
+                if (!newList.Contains(p.From))
+                {
+                    newList.Add(p.From);
+                }
+                if (!newList.Contains(p.To))
+                {
+                    newList.Add(p.To);
+                }
+            }
+            return newList;
+        }
+        private void DfsAllMustPassPaths(int from, int end, List<int> remainPoints, List<Path> remainPaths, Path currentPath = null)
+        {
+            //List<int> shouldPassPoints = GetShouldPassPoints(remainPoints, remainPaths);
+            if (remainPaths.Count == 0 && remainPoints.Count == 0)
             {
                 foreach (Path endPath in Matrix[from, end].Paths)
                 {
                     var newPath = new Path(currentPath, endPath);
 
                     bool shouldAdd = true;
+
                     //判断是否经过必经路径
-                    for (int i = 0; i < MustPassEitherWayPaths.Count; i = i + 2)
-                    {
-                        if (!(newPath.ContainPath(MustPassEitherWayPaths[i]) || newPath.ContainPath(MustPassEitherWayPaths[i + 1])))
-                        {
-                            shouldAdd = false;
-                        }
-                    }
-                    
+                    //for (int i = 0; i < MustPassEitherWayPaths.Count; i = i + 2)
+                    //{
+                    //    if (!(newPath.ContainPath(MustPassEitherWayPaths[i]) || newPath.ContainPath(MustPassEitherWayPaths[i + 1])))
+                    //    {
+                    //        shouldAdd = false;
+                    //    }
+                    //}
+
                     for (int i = TargetPathsContainer.Paths.Count; i > 0; i--)
                     {
+
                         var path = TargetPathsContainer.Paths[i - 1];
                         if (newPath.IsUseless(path)) { shouldAdd = false; }
-                        if (path.IsUseless(newPath)) { TargetPathsContainer.Paths.Remove(path); }
+                        if (newPath.IsEquals(path)) { shouldAdd = false; }
+                        if (shouldAdd == true && path.IsUseless(newPath))
+                        {
+                            TargetPathsContainer.Paths.Remove(path);
+                        }
                     }
-                    
+
+
                     if (shouldAdd)
                     {
                         TargetPathsContainer.Paths.Add(newPath);
@@ -429,29 +457,100 @@ namespace ZTEChallenge
 
 
             //对于每个剩余必经点
-            for (int i = 0; i < RemainPoints.Count; i++)
+            for (int i = 0; i < remainPoints.Count; i++)
             {
                 //非第一步时,如果下一个必经点到终点的步数和距离同时大于当前点的,则跳过
-                //if (Matrix[from, end].MinDistancePath.Distance < Matrix[RemainPoints[i], end].MinDistancePath.Distance &&
-                //    Matrix[from, end].MinStepPath.Step < Matrix[RemainPoints[i], end].MinStepPath.Step && currentPath != null
-                //    )
-                //{
-                //    continue;
-                //}
-                //对于每个从当前点到剩余必经点i的路径
-                for (int j = 0; j < Matrix[from, RemainPoints[i]].Paths.Count; j++)
+                if (Matrix[from, end].MinDistancePath.Distance < Matrix[remainPoints[i], end].MinDistancePath.Distance &&
+                    Matrix[from, end].MinStepPath.Step < Matrix[remainPoints[i], end].MinStepPath.Step && currentPath != null
+                    &&Cut
+                    )
                 {
+                    
+                    continue;
+                }
+                
+                //起始点是必经点
+                if (remainPoints[i] == from)
+                {
+                    Path newPath = new Path(currentPath);
+                    int nextPoint = from;
+                    List<int> nextRemainPoints = new List<int>(remainPoints);
+                    nextRemainPoints.Remove(remainPoints[i]);
+                    List<Path> nextRemainPaths = new List<Path>(remainPaths);
+                    DfsAllMustPassPaths(nextPoint, end, nextRemainPoints, nextRemainPaths, newPath);
+                }
+                else
+                {
+                    for (int j = 0; j < Matrix[from, remainPoints[i]].Paths.Count; j++)
+                    {
+                        Path newPath = currentPath == null ? Matrix[from, remainPoints[i]].Paths[j] : new Path(currentPath, Matrix[from, remainPoints[i]].Paths[j]);
 
+                        int nextPoint = Matrix[from, remainPoints[i]].Paths[j].To;
 
-                    Path newPath = currentPath == null ? Matrix[from, RemainPoints[i]].Paths[j] : new Path(currentPath, Matrix[from, RemainPoints[i]].Paths[j]);
+                        List<int> nextRemainPoints = new List<int>(remainPoints);
+                        nextRemainPoints.Remove(remainPoints[i]);
 
+                        List<Path> nextRemainPaths = new List<Path>(remainPaths);
 
+                        DfsAllMustPassPaths(nextPoint, end, nextRemainPoints, nextRemainPaths, newPath);
+                    }
+                }
 
-                    List<int> nextLastPoints = new List<int>(RemainPoints);
+            }
+            //对于每条必经路径
+            for (int i = remainPaths.Count; i > 0; i -= 2)
+            {
+                Path mustPassPath = remainPaths[i - 1];
+                Path mustPassPathElse = remainPaths[i - 2];
+                if (from == mustPassPath.From)
+                {
+                    Path newPath = currentPath == null ? new Path(mustPassPath) : new Path(currentPath, mustPassPath);
 
-                    int nextPoint = Matrix[from, RemainPoints[i]].Paths[j].To;
-                    nextLastPoints.RemoveAt(i);
-                    DfsAllMustPassPaths(nextPoint, end, nextLastPoints, newPath);
+                    int nextPoint = mustPassPath.To;
+                    List<Path> nextRemainPaths = new List<Path>(remainPaths);
+                    nextRemainPaths.Remove(mustPassPath);
+                    nextRemainPaths.Remove(mustPassPathElse);
+                    List<int> nextRemainPoints = new List<int>(remainPoints);
+                    DfsAllMustPassPaths(nextPoint, end, nextRemainPoints, nextRemainPaths, newPath);
+                }
+                else
+                {
+                    foreach (Path toMustPassPath in Matrix[from, mustPassPath.From].Paths)
+                    {
+                        Path newPath = currentPath == null ? new Path(toMustPassPath) : new Path(currentPath, toMustPassPath);
+                        newPath = new Path(newPath, mustPassPath);
+                        int nextPoint = mustPassPath.To;
+                        List<Path> nextRemainPaths = new List<Path>(remainPaths);
+                        nextRemainPaths.Remove(mustPassPath);
+                        nextRemainPaths.Remove(mustPassPathElse);
+                        List<int> nextRemainPoints = new List<int>(remainPoints);
+                        DfsAllMustPassPaths(nextPoint, end, nextRemainPoints, nextRemainPaths, newPath);
+
+                    }
+                }
+                if (from == mustPassPathElse.From)
+                {
+                    Path newPath = currentPath == null ? new Path(mustPassPathElse) : new Path(currentPath, mustPassPathElse);
+                    int nextPoint = mustPassPathElse.To;
+                    List<Path> nextRemainPaths = new List<Path>(remainPaths);
+                    nextRemainPaths.Remove(mustPassPath);
+                    nextRemainPaths.Remove(mustPassPathElse);
+                    List<int> nextRemainPoints = new List<int>(remainPoints);
+                    DfsAllMustPassPaths(nextPoint, end, nextRemainPoints, nextRemainPaths, newPath);
+                }
+                else
+                {
+                    foreach (Path toMustPassPath in Matrix[from, mustPassPathElse.From].Paths)
+                    {
+                        Path newPath = currentPath == null ? new Path(toMustPassPath) : new Path(currentPath, toMustPassPath);
+                        newPath = new Path(newPath, mustPassPathElse);
+                        int nextPoint = mustPassPathElse.To;
+                        List<Path> nextRemainPaths = new List<Path>(remainPaths);
+                        nextRemainPaths.Remove(mustPassPath);
+                        nextRemainPaths.Remove(mustPassPathElse);
+                        List<int> nextRemainPoints = new List<int>(remainPoints);
+                        DfsAllMustPassPaths(nextPoint, end, nextRemainPoints, nextRemainPaths, newPath);
+                    }
                 }
             }
         }
@@ -514,7 +613,7 @@ namespace ZTEChallenge
         private void InitMatrix(int size)
         {
             Matrix = new PathsContainer[size, size];
-            OriginalMatrix= new PathsContainer[size, size];
+            OriginalMatrix = new PathsContainer[size, size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -523,8 +622,8 @@ namespace ZTEChallenge
                     {
                         Matrix[i, j] = new PathsContainer(i, j);
                         OriginalMatrix[i, j] = new PathsContainer(i, j);
-                        Matrix[i, j].Paths.Add(new Path(i, j, 0));
-                        OriginalMatrix[i, j].Paths.Add(new Path(i, j, 0));
+                        //Matrix[i, j].Paths.Add(new Path(i, j, 0));
+                        //OriginalMatrix[i, j].Paths.Add(new Path(i, j, 0));
                     }
                     else
                     {
@@ -604,6 +703,8 @@ namespace ZTEChallenge
             }
             return true;
         }
+
+
 
         //public void RemoveAlllllll()
         //{
@@ -751,7 +852,7 @@ namespace ZTEChallenge
         //    }
         //    return ret;
         //}
-        
+
         /// <summary>
         /// 同时移除了无用路径
         /// </summary>
