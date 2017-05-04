@@ -176,13 +176,12 @@ namespace ZTEChallenge
                                     if (newPath.Distance >= eachPath.Distance && newPath.Step >= eachPath.Step) { shouldAdd = false; }
                                     //是否保留相同权值和步数的路径,保留会影响搜索速度,但能找到多个最优解(如果存在).
                                     if (newPath.EqualsInValue(eachPath) && RetainSameValuePaths) { shouldAdd = true; }
-                                    //借此循环删除List中无用路径
-                                    if (eachPath.IsUseless(newPath)) { Matrix[i, j].Paths.Remove(eachPath); }
                                     //保存最小Distance路径
                                     if (newPath.LessValueOfDistance(Matrix[i, j].MinDistancePath)) { Matrix[i, j].MinDistancePath = newPath; }
                                     //保存最小Step路径
                                     if (newPath.LessValueOfStep(Matrix[i, j].MinStepPath)) { Matrix[i, j].MinStepPath = newPath; }
-
+                                    //借此循环删除List中无用路径
+                                    if (eachPath.IsUseless(newPath)) { Matrix[i, j].Paths.Remove(eachPath); }
                                 }
                                 #endregion
                                 if (shouldAdd) { Matrix[i, j].Paths.Add(newPath); }
@@ -414,13 +413,11 @@ namespace ZTEChallenge
         }
         private void DfsAllMustPassPaths(int from, int end, List<int> remainPoints, List<Path> remainPaths, Path currentPath = null)
         {
-            //List<int> shouldPassPoints = GetShouldPassPoints(remainPoints, remainPaths);
             if (remainPaths.Count == 0 && remainPoints.Count == 0)
             {
                 foreach (Path endPath in Matrix[from, end].Paths)
                 {
-                    var newPath = new Path(currentPath, endPath);
-
+                    var newPath =currentPath==null?new Path(endPath):new Path(currentPath, endPath);
                     bool shouldAdd = true;
 
                     //判断是否经过必经路径
@@ -455,20 +452,30 @@ namespace ZTEChallenge
                 return;
             }
 
-
+            #region 必经点
             //对于每个剩余必经点
             for (int i = 0; i < remainPoints.Count; i++)
             {
-                //非第一步时,如果下一个必经点到终点的步数和距离同时大于当前点的,则跳过
-                if (Matrix[from, end].MinDistancePath.Distance < Matrix[remainPoints[i], end].MinDistancePath.Distance &&
-                    Matrix[from, end].MinStepPath.Step < Matrix[remainPoints[i], end].MinStepPath.Step && currentPath != null
-                    &&Cut
-                    )
+                if (currentPath != null) { if (currentPath.ContainPoint(remainPoints[i])) { continue; } }
+
+
+                if (currentPath != null && Cut)
                 {
-                    
-                    continue;
+                    int lastJoinPoint = currentPath.lastJoinPoint;
+                    //下一个点到终点步数和距离同时小于当前点的(相对于终点走了回头路) && 上一个点到该点的距离和步数同时小于到下一个点的距离
+                    if (Matrix[from, end].MinDistancePath.Distance < Matrix[remainPoints[i], end].MinDistancePath.Distance &&
+                        Matrix[from, end].MinStepPath.Step < Matrix[remainPoints[i], end].MinStepPath.Step &&
+
+                        Matrix[lastJoinPoint, from].MinDistancePath.Distance < Matrix[lastJoinPoint, remainPoints[i]].MinDistancePath.Distance &&
+                        Matrix[lastJoinPoint, from].MinStepPath.Step < Matrix[lastJoinPoint, remainPoints[i]].MinStepPath.Step
+                        )
+                    {
+
+                        continue;
+                    }
                 }
-                
+
+
                 //起始点是必经点
                 if (remainPoints[i] == from)
                 {
@@ -497,11 +504,20 @@ namespace ZTEChallenge
                 }
 
             }
+            #endregion
+
             //对于每条必经路径
             for (int i = remainPaths.Count; i > 0; i -= 2)
             {
+
                 Path mustPassPath = remainPaths[i - 1];
                 Path mustPassPathElse = remainPaths[i - 2];
+
+                if (currentPath != null)
+                {
+                    if (currentPath.ContainPath(remainPaths[i - 1]) || currentPath.ContainPath(remainPaths[i - 2])) { continue; }
+                }
+
                 if (from == mustPassPath.From)
                 {
                     Path newPath = currentPath == null ? new Path(mustPassPath) : new Path(currentPath, mustPassPath);
@@ -588,27 +604,35 @@ namespace ZTEChallenge
                 DataSet csvData = new DataSet();
 
                 adapter.Fill(csvData, "Csv");
+                return csvData.Tables[0];
 
-                return csvData.Tables[0]; ;
             }
-            finally
+            catch (Exception e)
             {
-                if (connection != null)
-                {
-                    connection.Close();
-                    connection.Dispose();
-                }
-
-                if (command != null)
-                {
-                    command.Dispose();
-                }
-
-                if (adapter != null)
-                {
-                    adapter.Dispose();
-                }
+                Console.WriteLine(e.Message);
+                return null;
             }
+
+            //finally
+            //{
+            //    if (connection != null)
+            //    {
+            //        connection.Close();
+            //        connection.Dispose();
+            //    }
+
+            //    if (command != null)
+            //    {
+            //        command.Dispose();
+            //    }
+
+            //    if (adapter != null)
+            //    {
+            //        adapter.Dispose();
+            //    }
+            //    return false;
+            //}
+
         }
         private void InitMatrix(int size)
         {
@@ -684,7 +708,7 @@ namespace ZTEChallenge
         {
             try
             {
-                DataTable dt = CsvConvertToTable("C:\\", "topo.csv");
+                DataTable dt = CsvConvertToTable(Directory.GetCurrentDirectory() + "\\" + path, fileName);
                 TableSize = (int)dt.Compute("max(F2)", "") + 1;
                 InitMatrix(TableSize);
                 foreach (DataRow row in dt.Rows)

@@ -13,12 +13,12 @@ namespace ZTEChallenge
 
         static void Main(string[] args)
         {
-            Map newMap = new Map("TestData/input.txt");
-            newMap.AddMustNotPassAnyWayPath(11, 12);
-            newMap.AddMustPassPoint(7);
-            newMap.AddMustPassPoint(12);
-            newMap.AddMustPassEitherWayPath(2, 4);
-            newMap.AddMustPassEitherWayPath(13, 14);
+            Map newMap = new Map("TestData//topo1.csv");
+            //newMap.AddMustNotPassAnyWayPath(11, 12);
+            //newMap.AddMustPassPoint(7);
+            //newMap.AddMustPassPoint(12);
+            //newMap.AddMustPassEitherWayPath(2, 4);
+            //newMap.AddMustPassEitherWayPath(13, 14);
 
             //关闭保留相同权值路径可大幅提高搜索速度,但只能获得部分最优解,在不需要多个最优解时可关闭.
             //newMap.RetainSameValuePaths = false;

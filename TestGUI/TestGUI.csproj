@@ -94,6 +94,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="TestData\topo1.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

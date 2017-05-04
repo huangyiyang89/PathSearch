@@ -12,6 +12,7 @@ namespace ZTEChallenge
             Step = 1;
             if (to == from) { Step = 0; }
             PathStrNotIncludeTo = from.ToString() + " ";
+            lastJoinPoint = from;
 
         }
         public Path(Path p1, Path p2)
@@ -21,6 +22,7 @@ namespace ZTEChallenge
             Distance = p1.Distance + p2.Distance;
             Step = p1.Step + p2.Step;
             PathStrNotIncludeTo = p1.PathStrNotIncludeTo + p2.PathStrNotIncludeTo;
+            lastJoinPoint = p1.To;
         }
         public Path(Path p)
         {
@@ -29,6 +31,7 @@ namespace ZTEChallenge
             Distance = p.Distance;
             Step = p.Step;
             PathStrNotIncludeTo = p.PathStrNotIncludeTo;
+            lastJoinPoint = lastJoinPoint;
         }
         public int From { get; set; }
         public int To { get; set; }
@@ -96,7 +99,8 @@ namespace ZTEChallenge
             return Distance == path.Distance && Step == path.Step && !IsEquals(path) ? true : false;
         }
 
-
+        //如果是俩条路径新生成的路径，保存连接点
+        public int lastJoinPoint { get; set; }
         
 
 

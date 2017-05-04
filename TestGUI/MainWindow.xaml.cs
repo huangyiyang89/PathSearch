@@ -474,12 +474,12 @@ namespace TestGUI
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
         {
-            newMap.Cut = (bool)checkBox.IsChecked;
+            newMap.Cut = true;
             
         }
         private void checkBox_UnChecked(object sender, RoutedEventArgs e)
         {
-            newMap.Cut = (bool)checkBox.IsChecked;
+            newMap.Cut = false;
 
         }
     }

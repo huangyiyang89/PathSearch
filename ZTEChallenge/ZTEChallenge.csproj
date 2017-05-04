@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="TestData\topo1.csv" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestData\input.txt">
