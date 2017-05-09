@@ -1,18 +1,26 @@
 Title         : Welcome
-Author        : You
+Author        : 
 Logo          : True
 
 [TITLE]
+# 目录说明
 
-# Madoko 
+# 适用场合
+## 根据所给拓补
+*
+* 
+## 额外适用或可以适用的场合
 
-Madoko is [_**fast**_]{ :red } markdown processor for writing professional articles
-with a focus on simplicity and plain text readability.
+
+# 设计思路
 
 * Read the [reference manual].
 * Explore the upper-right toolbox menu to discover how Markdown works. 
 * `Alt-Q` reformats the current paragraph.
 
-Enjoy!
+# 模型
+*
+
+Thanks!
 
 [reference manual]: http://research.microsoft.com/en-us/um/people/daan/madoko/doc/reference.html  "Madoko reference manual"
